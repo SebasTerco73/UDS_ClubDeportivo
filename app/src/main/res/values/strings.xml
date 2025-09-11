@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">UDS Club Deportivo</string>
+    <string name="logo_description">Logo Club Deportivo</string>
+    <string name="btn_login">Iniciar Sesión</string>
+    <string name="hint_user">USUARIO</string>
+    <string name="hint_password">CONTRASEÑA</string>
+    <string name="txt_login_error">Usuario/Contraseña incorrecto</string>
+    <string name="btn_menu_salir">X</string>
+    <string name="btn_menu_salir_descr">Botón salir</string>
+
+</resources>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:visibility="visible"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="252dp"
+        android:layout_height="250dp"
+        android:contentDescription="@string/logo_description"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.066"
+        app:srcCompat="@drawable/logo"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/btn_iniciarSesion"
+        android:layout_width="225dp"
+        android:layout_height="77dp"
+        android:layout_marginTop="336dp"
+        android:text="@string/btn_login"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:backgroundTint="@color/botton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo" />
+
+    <EditText
+        android:id="@+id/txt_pass"
+        android:layout_width="360dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="41dp"
+        android:layout_marginBottom="208dp"
+        android:autofillHints="password"
+        android:background="@drawable/edittext_rounded"
+        android:ems="14"
+        android:gravity="bottom|center_horizontal"
+        android:hint="@string/hint_password"
+        android:inputType="textPassword"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#B0FFFFFF"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_user"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/txt_user"
+        android:layout_width="360dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="80dp"
+        android:autofillHints="username"
+        android:background="@drawable/edittext_rounded"
+        android:ems="14"
+        android:gravity="bottom|center_horizontal"
+        android:hint="@string/hint_user"
+        android:inputType="text"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#B0FFFFFF"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_iniciarSesion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo"
+        app:layout_constraintVertical_bias="0.013" />
+
+    <ImageButton
+        android:id="@+id/btn_salir"
+        android:layout_width="63dp"
+        android:layout_height="55dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/btn_menu_salir_descr"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.985"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01"
+        app:srcCompat="@drawable/salir"
+        tools:ignore="ImageContrastCheck" />
+
+    <TextView
+        android:id="@+id/txt_login_error"
+        android:layout_width="342dp"
+        android:layout_height="29dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/txt_login_error"
+        android:textColor="#850909"
+        android:textSize="24sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/btn_iniciarSesion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_pass" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
