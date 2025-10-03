@@ -1,5 +1,6 @@
 package com.example.udsclubdeportivo
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -10,6 +11,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class PagarActividadNoSocioActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,12 +28,12 @@ class PagarActividadNoSocioActivity : AppCompatActivity() {
 
         //CAMPOS
         val txtDocumento = findViewById<EditText>(R.id.tv_documento_no_socio)
-        val txt_fecha_pago = findViewById<EditText>(R.id.txt_fecha_pago)
+        val edtfechapago = findViewById<EditText>(R.id.txt_fecha_pago)
         val spinnerActividades = findViewById<Spinner>(R.id.spinner_actividades)
 
         val campos: List<View> = listOf(
             txtDocumento,
-            txt_fecha_pago,
+            edtfechapago,
             spinnerActividades
         )
 
@@ -55,6 +59,23 @@ class PagarActividadNoSocioActivity : AppCompatActivity() {
             limpiarCampos(campos)
             TODO()
         }
+        // Asignar DatePicker EditText
+        edtfechapago.setOnClickListener { mostrarDatePicker(edtfechapago)}
+    }
+    // 🔹 Función que abre un DatePicker y setea el resultado en el EditText
+    private fun mostrarDatePicker(editText: EditText) {
+        val calendario = Calendar.getInstance()
+        val año = calendario.get(Calendar.YEAR)
+        val mes = calendario.get(Calendar.MONTH)
+        val dia = calendario.get(Calendar.DAY_OF_MONTH)
+        val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+        val dpd = DatePickerDialog(this, { _, year, month, dayOfMonth ->
+            calendario.set(year, month, dayOfMonth)
+            editText.setText(formatoFecha.format(calendario.time))
+        }, año, mes, dia)
+        dpd.show()
+    }
     }
 
     private fun limpiarCampos(vistas: List<View>){
@@ -68,4 +89,3 @@ class PagarActividadNoSocioActivity : AppCompatActivity() {
         }
 
     }
-}

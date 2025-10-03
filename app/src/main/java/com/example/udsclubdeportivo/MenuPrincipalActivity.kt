@@ -38,23 +38,19 @@ class MenuPrincipalActivity : AppCompatActivity() {
         btnRegistrar.setOnClickListener {
             val intent = Intent(this, RegistrarClienteActivity::class.java)
             startActivity(intent)
-            // cerrarlo no haria falta
-            //finish()
+         finish()
         }
 
         val btnPagar = findViewById<Button>(R.id.btn_Pagos)
         btnPagar.setOnClickListener {
             val intent = Intent(this, SeleccionCobroActivity::class.java)
             startActivity(intent)
-            // cerrarlo no haria falta
-            //finish()
         }
 
         val btnVencimientos = findViewById<Button>(R.id.btn_Vencimientos)
         btnVencimientos.setOnClickListener {
             val intent = Intent(this, ListarVencimientoActivity::class.java)
             startActivity(intent)
-            //finish()
         }
 
         val btnCerrarSesion = findViewById<Button>(R.id.btn_CerrarSesion)

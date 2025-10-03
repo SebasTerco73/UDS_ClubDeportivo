@@ -79,7 +79,9 @@
                 android:padding="12dp"
                 android:text="fecha"
                 android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:focusable="false"
+                android:clickable="true"/>
 
             <ImageView
                 android:layout_width="40dp"
@@ -142,7 +144,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_cantidad_cuotas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -174,7 +176,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"/>
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -26,7 +26,7 @@ class PagarCuotaSocioActivity : AppCompatActivity() {
         }
 
         val docSocio = findViewById<EditText>(R.id.tv_documento)
-        val edtFechaNac = findViewById<EditText>(R.id.txt_fecha_pago)
+        val edtFechaPago = findViewById<EditText>(R.id.txt_fecha_pago)
         val cantCuotas = findViewById<TextView>(R.id.tv_cantidad_cuotas)
 
         // evento botones
@@ -44,19 +44,18 @@ class PagarCuotaSocioActivity : AppCompatActivity() {
 
         val btnLimpiar = findViewById<Button>(R.id.btn_limpiar)
         btnLimpiar.setOnClickListener {
-            limpiarCampos(docSocio,edtFechaNac,cantCuotas)
+            limpiarCampos(docSocio,edtFechaPago,cantCuotas)
         }
 
         val btnPagar = findViewById<Button>(R.id.btn_confirmar)
         btnPagar.setOnClickListener {
             //mostrar confirmacion
-            limpiarCampos(docSocio,edtFechaNac,cantCuotas)
+            limpiarCampos(docSocio,edtFechaPago,cantCuotas)
         }
 
-        // Asignar DatePicker a ambos??? EditText
-        edtFechaNac.setOnClickListener { mostrarDatePicker(edtFechaNac) }
+        // Asignar DatePicker EditText
+        edtFechaPago.setOnClickListener { mostrarDatePicker(edtFechaPago)}
     }
-
     // 🔹 Función que abre un DatePicker y setea el resultado en el EditText
     private fun mostrarDatePicker(editText: EditText) {
         val calendario = Calendar.getInstance()
