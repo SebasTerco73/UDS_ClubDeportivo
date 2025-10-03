@@ -1,6 +1,8 @@
 package com.example.udsclubdeportivo
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +31,23 @@ class MenuPrincipalActivity : AppCompatActivity() {
             name_user.text = "¡Usuario: $usuarioLogueado!"
         }else{
             name_user.text = "¡Usuario: Anonimo!"
+        }
+        // Dentro de tu Activity actual (por ejemplo MainActivity)
+        val btnRegistrar = findViewById<Button>(R.id.btn_RegistrarCliente)
+
+        btnRegistrar.setOnClickListener {
+            val intent = Intent(this, RegistrarCliente::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        // btn_Vencimientos
+        val btnVencimientos = findViewById<Button>(R.id.btn_Vencimientos)
+
+        btnVencimientos.setOnClickListener {
+            val intent = Intent(this, ListarVencimientoActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }
