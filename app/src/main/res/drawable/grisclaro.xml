@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Estado enfocado (cuando el usuario selecciona el elemento) -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#E0E0E0" /> <!-- Fondo gris muy claro -->
+            <stroke android:width="2dp" android:color="#FFFFFF" /> <!-- Borde blanco al enfocar -->
+            <corners android:radius="16dp" /> <!-- Redondeo de bordes: ajusta el valor para más/menos curvatura (ej. 8dp para sutil, 24dp para más redondo) -->
+            <padding android:left="16dp" android:top="12dp" android:right="16dp" android:bottom="12dp" />
+        </shape>
+    </item>
+
+    <!-- Estado normal (sin enfoque) -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#E0E0E0" /> <!-- Fondo gris muy claro -->
+            <stroke android:width="2dp" android:color="#BDBDBD" /> <!-- Borde gris claro -->
+            <corners android:radius="16dp" /> <!-- Redondeo de bordes: mismo valor para consistencia -->
+            <padding android:left="16dp" android:top="12dp" android:right="16dp" android:bottom="12dp" />
+        </shape>
+    </item>
+
+</selector>

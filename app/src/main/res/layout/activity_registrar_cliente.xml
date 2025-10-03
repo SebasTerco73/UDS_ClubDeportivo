@@ -5,68 +5,77 @@
     android:id="@+id/registrar_cliente"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@drawable/fondo"
     tools:context=".RegistrarCliente">
 
     <EditText
         android:id="@+id/txt_FechaNac"
         android:layout_width="290dp"
-        android:layout_height="44dp"
-        android:ems="14"
-        android:fontFamily="monospace"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_rounded"
+        android:clickable="true"
+        android:focusable="false"
         android:gravity="center"
-        android:inputType="datetime|date"
-        android:text="Seleccione Fecha"
+        android:hint="Fecha Nac."
         android:textColor="@color/white"
         android:textColorHint="#B0FFFFFF"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.111"
-        tools:background="@drawable/edittext_rounded" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.67" />
+
+    <EditText
+        android:id="@+id/txt_FechaInscripcion"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:background="@drawable/edittext_rounded"
+        android:clickable="true"
+        android:focusable="false"
+        android:gravity="center"
+        android:hint="Fecha Inscripción"
+        android:textColor="@color/white"
+        android:textColorHint="#B0FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_FechaNac" />
 
     <EditText
         android:id="@+id/txt_apellido"
         android:layout_width="290dp"
-        android:layout_height="44dp"
-        android:ems="14"
-        android:fontFamily="monospace"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_rounded"
         android:gravity="center"
-        android:inputType="text"
-        android:text="Apellido"
+        android:inputType="textPersonName"
+        android:hint="Apellido"
         android:textColor="@color/white"
         android:textColorHint="#B0FFFFFF"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.429"
+        app:layout_constraintTop_toBottomOf="@id/txt_nombre"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.451"
-        tools:background="@drawable/edittext_rounded" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
 
     <EditText
         android:id="@+id/txt_telefono"
         android:layout_width="290dp"
-        android:layout_height="44dp"
-        android:ems="14"
-        android:fontFamily="monospace"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_rounded"
         android:gravity="center"
-        android:inputType="text"
-        android:text="Telefono"
+        android:inputType="phone"
+        android:hint="Teléfono"
         android:textColor="@color/white"
         android:textColorHint="#B0FFFFFF"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintTop_toBottomOf="@id/txt_apellido"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.545"
-        tools:background="@drawable/edittext_rounded" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
 
     <TextView
         android:id="@+id/textView"
@@ -86,8 +95,8 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="145dp"
-        android:layout_height="37dp"
+        android:layout_width="140dp"
+        android:layout_height="24dp"
         android:fontFamily="monospace"
         android:text="FECHA NAC."
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -95,9 +104,26 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.626" />
+        app:layout_constraintVertical_bias="0.598" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="262dp"
+        android:layout_height="26dp"
+        android:fontFamily="monospace"
+        android:text="FECHA DE INSCRIPCION"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.726" />
 
     <TextView
         android:id="@+id/textView2"
@@ -173,41 +199,100 @@
         android:id="@+id/txt_documento"
         android:layout_width="290dp"
         android:layout_height="wrap_content"
-        android:ems="14"
-        android:fontFamily="monospace"
+        android:layout_marginTop="184dp"
+        android:background="@drawable/edittext_rounded"
         android:gravity="center"
-        android:inputType="text"
-        android:text="N° de Documento"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:hint="N° de Documento"
+        android:inputType="number"
         android:textColor="@color/white"
         android:textColorHint="#B0FFFFFF"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.265"
-        tools:background="@drawable/edittext_rounded" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/txt_nombre"
-        android:layout_width="287dp"
-        android:layout_height="44dp"
-        android:ems="14"
-        android:fontFamily="monospace"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_rounded"
         android:gravity="center"
-        android:inputType="text"
-        android:text="Nombre"
+        android:inputType="textPersonName"
+        android:hint="Nombre"
         android:textColor="@color/white"
         android:textColorHint="#B0FFFFFF"
         android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/txt_documento"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <CheckBox
+        android:id="@+id/chb.FichaMedica"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:text="Ficha Medica"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.475"
+        app:layout_constraintHorizontal_bias="0.249"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_FechaInscripcion"
+        app:layout_constraintVertical_bias="0.141" />
+
+    <CheckBox
+        android:id="@+id/chb.AptoFisico"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:text="Apto Fisico"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.797"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_FechaInscripcion"
+        app:layout_constraintVertical_bias="0.173" />
+
+    <Button
+        android:id="@+id/btn_Volver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/botton"
+        android:text="VOLVER"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.051"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.358"
-        tools:background="@drawable/edittext_rounded" />
+        app:layout_constraintVertical_bias="0.979" />
+
+    <Button
+        android:id="@+id/btn_Limpiar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/botton"
+        android:text="LIMPIAR"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.415"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.979" />
+
+    <Button
+        android:id="@+id/btn_Confirmar"
+        android:layout_width="131dp"
+        android:layout_height="46dp"
+        android:backgroundTint="@color/design_default_color_secondary"
+        android:text="CONFIRMAR"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.928"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.979" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

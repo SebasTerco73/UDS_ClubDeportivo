@@ -38,7 +38,16 @@ class MenuPrincipalActivity : AppCompatActivity() {
         btnRegistrar.setOnClickListener {
             val intent = Intent(this, RegistrarCliente::class.java)
             startActivity(intent)
+            finish()
         }
 
+        // btn_Vencimientos
+        val btnVencimientos = findViewById<Button>(R.id.btn_Vencimientos)
+
+        btnVencimientos.setOnClickListener {
+            val intent = Intent(this, ListarVencimientoActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }

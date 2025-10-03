@@ -16,7 +16,7 @@ class LoginActivity : AppCompatActivity() {
 
 // Lista de pares - it.first/ it.second acceder a los valores
     private val users = listOf(
-        "sebas" to "pass1",
+        "" to "",
         "user2" to "pass2"
     )
 

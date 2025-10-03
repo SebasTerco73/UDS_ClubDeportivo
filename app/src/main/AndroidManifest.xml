@@ -12,6 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UDSClubDeportivo">
         <activity
+            android:name=".PagarActividadNoSocioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PagarCuotaSocioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SeleccionCobroActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ListarVencimientoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ListarVencimientosActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegistrarCliente"
             android:exported="false" />
         <activity
