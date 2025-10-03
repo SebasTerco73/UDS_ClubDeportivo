@@ -93,8 +93,6 @@ package com.example.udsclubdeportivo
                 }
                 val btnVolver = findViewById<Button>(R.id.btn_volver)
                 btnVolver.setOnClickListener {
-                    val intent = Intent(this, MenuPrincipalActivity::class.java)
-                    startActivity(intent)
                     finish()
                 }
 

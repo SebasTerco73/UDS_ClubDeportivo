@@ -24,10 +24,7 @@
             android:name=".ListarVencimientoActivity"
             android:exported="false" />
         <activity
-            android:name=".ListarVencimientosActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RegistrarCliente"
+            android:name=".RegistrarClienteActivity"
             android:exported="false" />
         <activity
             android:name=".MenuPrincipalActivity"

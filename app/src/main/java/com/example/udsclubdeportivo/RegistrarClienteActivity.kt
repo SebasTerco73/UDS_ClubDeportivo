@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class RegistrarCliente : AppCompatActivity() {
+class RegistrarClienteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,22 +24,53 @@ class RegistrarCliente : AppCompatActivity() {
             insets
         }
 
+        // Encontrar fechas
         val edtFechaNac = findViewById<EditText>(R.id.txt_FechaNac)
         val edtFechaIns = findViewById<EditText>(R.id.txt_FechaInscripcion)
 
-        // 1. Encontrar el botón de volver
+        // 1. Encontrar botones
         val btnVolver = findViewById<Button>(R.id.btn_Volver) // Asegúrate de que el ID en tu layout sea 'btn_volver'
+        val btnRegistrar = findViewById<Button>(R.id.btn_Confirmar)
+        val btnLimpiar = findViewById<Button>(R.id.btn_Limpiar)
+
+        // Encontrar textos
+        val txt_documento = findViewById<EditText>(R.id.txt_documento)
+        val txt_nombre = findViewById<EditText>(R.id.txt_nombre)
+        val txt_apellido = findViewById<EditText>(R.id.txt_apellido)
+        val txt_telefono = findViewById<EditText>(R.id.txt_telefono)
+
+        val campos = listOf<EditText>(
+            edtFechaNac,
+            edtFechaIns,
+            txt_documento,
+            txt_nombre,
+            txt_apellido,
+            txt_telefono
+        )
 
         // Asignar DatePicker a ambos EditText
         edtFechaNac.setOnClickListener { mostrarDatePicker(edtFechaNac) }
         edtFechaIns.setOnClickListener { mostrarDatePicker(edtFechaIns) }
 
-        // 2. Asignar el Listener al botón de volver
+        // Asignar listeners
         btnVolver.setOnClickListener {
-            // Crear un Intent para navegar a MenuPrincipalActivity
             val intent = Intent(this, MenuPrincipalActivity::class.java)
             startActivity(intent)
             finish()
+        }
+
+        btnLimpiar.setOnClickListener {
+            limpiarCampos(campos)
+        }
+
+        btnRegistrar.setOnClickListener {
+            val todosLlenos = campos.all { it.text.toString().trim().isNotEmpty() }
+            if (todosLlenos) {
+                // Falta pasarle los datos del socio registrado
+                val intent = Intent(this, SeleccionCobroActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
     }
 
@@ -57,5 +88,11 @@ class RegistrarCliente : AppCompatActivity() {
         }, año, mes, dia)
 
         dpd.show()
+    }
+
+    private fun limpiarCampos(campos: List<EditText>){
+        for (campo in campos){
+            campo.setText("")
+        }
     }
 }

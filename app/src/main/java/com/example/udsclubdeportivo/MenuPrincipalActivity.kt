@@ -19,7 +19,6 @@ class MenuPrincipalActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val intent = intent
 
         // 2. Extraer el valor del nombre de usuario usando la clave "usuario_logueado"
         val usuarioLogueado = intent.getStringExtra("user")
@@ -32,20 +31,35 @@ class MenuPrincipalActivity : AppCompatActivity() {
         }else{
             name_user.text = "¡Usuario: Anonimo!"
         }
-        // Dentro de tu Activity actual (por ejemplo MainActivity)
-        val btnRegistrar = findViewById<Button>(R.id.btn_RegistrarCliente)
 
+        //Eventos de click
+
+        val btnRegistrar = findViewById<Button>(R.id.btn_RegistrarCliente)
         btnRegistrar.setOnClickListener {
-            val intent = Intent(this, RegistrarCliente::class.java)
+            val intent = Intent(this, RegistrarClienteActivity::class.java)
             startActivity(intent)
-            finish()
+            // cerrarlo no haria falta
+            //finish()
         }
 
-        // btn_Vencimientos
-        val btnVencimientos = findViewById<Button>(R.id.btn_Vencimientos)
+        val btnPagar = findViewById<Button>(R.id.btn_Pagos)
+        btnPagar.setOnClickListener {
+            val intent = Intent(this, SeleccionCobroActivity::class.java)
+            startActivity(intent)
+            // cerrarlo no haria falta
+            //finish()
+        }
 
+        val btnVencimientos = findViewById<Button>(R.id.btn_Vencimientos)
         btnVencimientos.setOnClickListener {
             val intent = Intent(this, ListarVencimientoActivity::class.java)
+            startActivity(intent)
+            //finish()
+        }
+
+        val btnCerrarSesion = findViewById<Button>(R.id.btn_CerrarSesion)
+        btnCerrarSesion.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         }
