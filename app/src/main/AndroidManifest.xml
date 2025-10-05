@@ -12,6 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UDSClubDeportivo">
         <activity
+            android:name=".PagarActividadNoSocioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PagarCuotaSocioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SeleccionCobroActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ListarVencimientoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegistrarClienteActivity"
+            android:exported="false" />
+        <activity
             android:name=".MenuPrincipalActivity"
             android:exported="false" />
         <activity
@@ -23,6 +38,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

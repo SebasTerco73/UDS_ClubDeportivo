@@ -1,6 +1,8 @@
 package com.example.udsclubdeportivo
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +19,6 @@ class MenuPrincipalActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val intent = intent
 
         // 2. Extraer el valor del nombre de usuario usando la clave "usuario_logueado"
         val usuarioLogueado = intent.getStringExtra("user")
@@ -29,6 +30,34 @@ class MenuPrincipalActivity : AppCompatActivity() {
             name_user.text = "¡Usuario: $usuarioLogueado!"
         }else{
             name_user.text = "¡Usuario: Anonimo!"
+        }
+
+        //Eventos de click
+
+        val btnRegistrar = findViewById<Button>(R.id.btn_RegistrarCliente)
+        btnRegistrar.setOnClickListener {
+            val intent = Intent(this, RegistrarClienteActivity::class.java)
+            startActivity(intent)
+         finish()
+        }
+
+        val btnPagar = findViewById<Button>(R.id.btn_Pagos)
+        btnPagar.setOnClickListener {
+            val intent = Intent(this, SeleccionCobroActivity::class.java)
+            startActivity(intent)
+        }
+
+        val btnVencimientos = findViewById<Button>(R.id.btn_Vencimientos)
+        btnVencimientos.setOnClickListener {
+            val intent = Intent(this, ListarVencimientoActivity::class.java)
+            startActivity(intent)
+        }
+
+        val btnCerrarSesion = findViewById<Button>(R.id.btn_CerrarSesion)
+        btnCerrarSesion.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }

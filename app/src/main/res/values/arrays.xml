@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="actividades_del_club">
+        <item>FUTBOL</item>
+        <item>BASKETBALL</item>
+        <item>NATACIÓN</item>
+        <item>VOLEY</item>
+    </string-array>
+</resources>
