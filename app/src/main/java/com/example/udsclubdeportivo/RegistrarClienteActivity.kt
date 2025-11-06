@@ -20,9 +20,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.appcompat.app.AlertDialog
-import com.example.udsclubdeportivo.PagarCuotaSocioActivity
-import com.example.udsclubdeportivo.PagarActividadNoSocioActivity
-
 class RegistrarClienteActivity : AppCompatActivity() {
 
     private lateinit var clienteRepository: ClienteRepository

@@ -2,17 +2,29 @@ package com.example.udsclubdeportivo
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
+// Importaciones necesarias para la consulta compleja
+import android.database.Cursor
+import java.util.ArrayList
+
+// -------------------------------------------------------------------
+// 'data class' para los resultados (está igual)
+// -------------------------------------------------------------------
+data class ClienteParaListado(
+    val id: String, // Usaremos el documento como ID en la lista
+    val nombreCompleto: String,
+    val vencimiento: String, // FechaVenc (Socio) o FechaPago (No Socio)
+    val actividad: String, // "Membresía" (Socio) o la actividad (No Socio)
+    val esSocio: Boolean
+)
 
 class ClienteRepository(context: Context) {
 
     // Instancia del Helper obtenida a través del Singleton.
-    // Esto asegura que solo haya una instancia del Helper en toda la aplicación.
     private val dbHelper = DatabaseHelper.getInstance(context)
 
     /**
      * Inserta un nuevo cliente en la tabla 'clientes'.
-     * @return El ID de la fila insertada o -1 si hubo un error.
+     * (Esta función está igual que la tuya)
      */
     fun insertarCliente(
         tipoCliente: String,
@@ -26,10 +38,7 @@ class ClienteRepository(context: Context) {
         tieneAptoFisico: Boolean
     ): Long {
 
-        // Obtener la base de datos en modo escritura justo antes de la operación
         val db = dbHelper.writableDatabase
-
-        // Usar ContentValues para mapear las columnas a sus valores
         val values = ContentValues().apply {
             put(DatabaseHelper.COLUMN_TIPO, tipoCliente)
             put(DatabaseHelper.COLUMN_DOCUMENTO, documento)
@@ -38,52 +47,123 @@ class ClienteRepository(context: Context) {
             put(DatabaseHelper.COLUMN_TELEFONO, telefono)
             put(DatabaseHelper.COLUMN_FECHA_NAC, fechaNacimiento)
             put(DatabaseHelper.COLUMN_FECHA_INS, fechaInscripcion)
-
-            // Convertir Boolean a INTEGER: true=1, false=0 (Estándar de SQLite)
             put(DatabaseHelper.COLUMN_FICHA_MEDICA, if (tieneFichaMedica) 1 else 0)
             put(DatabaseHelper.COLUMN_APTO_FISICO, if (tieneAptoFisico) 1 else 0)
         }
-
-        // Ejecutar la inserción
         val newRowId = db.insert(DatabaseHelper.TABLE_CLIENTES, null, values)
-        // Nota: NO se cierra la base de datos aquí. El sistema lo gestiona a través del Singleton.
         return newRowId
     }
 
     /**
      * Busca un cliente por su número de documento.
-     * @return El tipo de cliente ("Socio" o "No Socio") si se encuentra, o null si no existe.
+     * (Esta función está igual que la tuya)
      */
     fun buscarClientePorDocumento(documento: String): String? {
-        // Usamos readableDatabase para una consulta de solo lectura
         val db = dbHelper.readableDatabase
         var tipoCliente: String? = null
-
-        // Proyección: solo obtenemos la columna del tipo de cliente
         val projection = arrayOf(DatabaseHelper.COLUMN_TIPO)
-
-        // Cláusula WHERE
         val selection = "${DatabaseHelper.COLUMN_DOCUMENTO} = ?"
         val selectionArgs = arrayOf(documento)
-
         val cursor = db.query(
             DatabaseHelper.TABLE_CLIENTES,
             projection,
             selection,
             selectionArgs,
             null, null, null,
-            "1" // LIMIT 1: para detener la búsqueda al encontrar el primero
+            "1"
         )
-
-        // Usamos 'use' para asegurar que el Cursor se cierre automáticamente
         cursor?.use {
             if (it.moveToFirst()) {
-                // Obtener el índice de la columna y luego el valor como String
                 val tipoIndex = it.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TIPO)
                 tipoCliente = it.getString(tipoIndex)
             }
         }
-        // Retorna el tipo de cliente ("Socio", "No Socio") o null
         return tipoCliente
+    }
+
+    // -------------------------------------------------------------------
+    // MODIFICACIÓN: MÉTODO ACTUALIZADO CON LÓGICA DE JOIN
+    // -------------------------------------------------------------------
+    /**
+     * Obtiene una lista consolidada de TODOS los pagos (Socios y No Socios)
+     * que tienen vencimiento, uniéndolos con la información del cliente.
+     * ESTA ES LA LÓGICA CENTRAL QUE NECESITAS.
+     */
+    fun obtenerClientesParaListado(): List<ClienteParaListado> {
+        // Usamos mutableListOf para la lista que crecerá
+        val listaConsolidada = mutableListOf<ClienteParaListado>()
+        // dbHelper.readableDatabase es una propiedad en Kotlin
+        val db = dbHelper.readableDatabase
+
+        // --- 1. OBTENER PAGOS DE SOCIOS (JOIN) ---
+        // Usamos cadenas multilínea (""") y plantillas de string ($)
+        val querySocios = """
+            SELECT
+                c.${DatabaseHelper.COLUMN_DOCUMENTO},
+                c.${DatabaseHelper.COLUMN_NOMBRE},
+                c.${DatabaseHelper.COLUMN_APELLIDO},
+                p.${DatabaseHelper.COLUMN_PAGO_SOCIO_FECHA_VENC}
+            FROM ${DatabaseHelper.TABLE_PAGOS_SOCIOS} p
+            JOIN ${DatabaseHelper.TABLE_CLIENTES} c ON p.${DatabaseHelper.COLUMN_PAGO_SOCIO_ID} = c.${DatabaseHelper.COLUMN_DOCUMENTO}
+            WHERE c.${DatabaseHelper.COLUMN_TIPO} = 'Socio'
+        """
+
+        // El bloque 'use' de Kotlin reemplaza al 'try-finally' y cierra el cursor automáticamente
+        db.rawQuery(querySocios, null)?.use { cursorSocios ->
+            // Obtenemos los índices de las columnas
+            val docIndex = cursorSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DOCUMENTO)
+            val nombreIndex = cursorSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NOMBRE)
+            val apellidoIndex = cursorSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_APELLIDO)
+            val vencIndex = cursorSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PAGO_SOCIO_FECHA_VENC)
+
+            while (cursorSocios.moveToNext()) {
+                // Usamos plantillas de string para concatenar
+                val nombreCompleto = "${cursorSocios.getString(nombreIndex)} ${cursorSocios.getString(apellidoIndex)}"
+
+                listaConsolidada.add(ClienteParaListado(
+                    cursorSocios.getString(docIndex),
+                    nombreCompleto,
+                    cursorSocios.getString(vencIndex), // Fecha Vencimiento
+                    "Membresía", // Actividad (Socio)
+                    true // esSocio = true
+                ))
+            }
+        } // El cursorSocios se cierra aquí
+
+        // --- 2. OBTENER PAGOS DE NO SOCIOS (JOIN) ---
+        val queryNoSocios = """
+            SELECT
+                c.${DatabaseHelper.COLUMN_DOCUMENTO},
+                c.${DatabaseHelper.COLUMN_NOMBRE},
+                c.${DatabaseHelper.COLUMN_APELLIDO},
+                p.${DatabaseHelper.COLUMN_FECHA_PAGO_NO_SOCIO},
+                p.${DatabaseHelper.COLUMN_ACTIVIDAD_PAGO}
+            FROM ${DatabaseHelper.TABLE_PAGOS_NO_SOCIOS} p
+            JOIN ${DatabaseHelper.TABLE_CLIENTES} c ON p.${DatabaseHelper.COLUMN_PAGO_ID_NO_SOCIO} = c.${DatabaseHelper.COLUMN_DOCUMENTO}
+            WHERE c.${DatabaseHelper.COLUMN_TIPO} = 'No Socio'
+        """
+
+        // Usamos 'use' de nuevo para el segundo cursor
+        db.rawQuery(queryNoSocios, null)?.use { cursorNoSocios ->
+            val docIndex = cursorNoSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DOCUMENTO)
+            val nombreIndex = cursorNoSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NOMBRE)
+            val apellidoIndex = cursorNoSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_APELLIDO)
+            val vencIndex = cursorNoSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_FECHA_PAGO_NO_SOCIO)
+            val actIndex = cursorNoSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ACTIVIDAD_PAGO)
+
+            while (cursorNoSocios.moveToNext()) {
+                val nombreCompleto = "${cursorNoSocios.getString(nombreIndex)} ${cursorNoSocios.getString(apellidoIndex)}"
+
+                listaConsolidada.add(ClienteParaListado(
+                    cursorNoSocios.getString(docIndex),
+                    nombreCompleto,
+                    cursorNoSocios.getString(vencIndex), // Fecha de Pago
+                    cursorNoSocios.getString(actIndex),  // Actividad
+                    false // esSocio = false
+                ))
+            }
+        } // El cursorNoSocios se cierra aquí
+
+        return listaConsolidada // Devuelve la lista combinada
     }
 }

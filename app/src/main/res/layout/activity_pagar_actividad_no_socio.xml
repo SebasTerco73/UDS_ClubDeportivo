@@ -115,6 +115,28 @@
             android:popupBackground="@android:color/white"
             tools:listitem="@android:layout/simple_spinner_dropdown_item" />
 
+        <RadioButton
+            android:id="@+id/rb_tarjeta3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/grisclaro"
+            android:buttonTint="@android:color/black"
+            android:paddingStart="8dp"
+            android:text="Tarjeta de credito"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rb_efectivo3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/grisclaro"
+            android:buttonTint="@android:color/black"
+            android:checked="true"
+            android:paddingStart="8dp"
+            android:text="Efectivo"
+            android:textSize="16sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
