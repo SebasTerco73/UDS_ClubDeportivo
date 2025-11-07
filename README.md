@@ -37,12 +37,12 @@
 | Proceso                          | Estado           |
 |----------------------------------|------------------|
 | Login de usuario                 | 🟢 Activo        |
-| Registro de socios               | 🔴 Sin aplicar   |
+| Registro de socios               | 🟢 Activo        |
 | Pago de cuota mensual            | 🔴 Sin aplicar   |
 | Emisión de carnet                | 🔴 Sin aplicar   |
-| Registro de no socios            | 🔴 Sin aplicar   |
+| Registro de no socios            | 🟢 Activo        |
 | Pago por actividad               | 🔴 Sin aplicar   |
-| Listado de vencimientos de cuota | 🔴 Sin aplicar   |
+| Listado de vencimientos de cuota | 🟢 Activo        |
 
 ---------------------------------------------------------------------------
 
