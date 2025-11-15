@@ -38,10 +38,10 @@
 |----------------------------------|------------------|
 | Login de usuario                 | 🟢 Activo        |
 | Registro de socios               | 🟢 Activo        |
-| Pago de cuota mensual            | 🔴 Sin aplicar   |
+| Pago de cuota mensual            | 🟢 Activo   |
 | Emisión de carnet                | 🔴 Sin aplicar   |
 | Registro de no socios            | 🟢 Activo        |
-| Pago por actividad               | 🔴 Sin aplicar   |
+| Pago por actividad               | 🟢 Activo   |
 | Listado de vencimientos de cuota | 🟢 Activo        |
 
 ---------------------------------------------------------------------------
