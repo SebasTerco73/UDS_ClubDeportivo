@@ -2,29 +2,36 @@ package com.example.udsclubdeportivo
 
 import android.content.ContentValues
 import android.content.Context
-// Importaciones necesarias para la consulta compleja
 import android.database.Cursor
 import java.util.ArrayList
 
-// -------------------------------------------------------------------
-// 'data class' para los resultados (está igual)
-// -------------------------------------------------------------------
+// --- DATA CLASSES ---
+data class DatosSocio(
+    val nombre: String,
+    val apellido: String
+)
+
 data class ClienteParaListado(
-    val id: String, // Usaremos el documento como ID en la lista
+    val id: String,
     val nombreCompleto: String,
-    val vencimiento: String, // FechaVenc (Socio) o FechaPago (No Socio)
-    val actividad: String, // "Membresía" (Socio) o la actividad (No Socio)
+    val vencimiento: String,
+    val actividad: String,
     val esSocio: Boolean
 )
+// --- FIN DATA CLASSES ---
+
 
 class ClienteRepository(context: Context) {
 
-    // Instancia del Helper obtenida a través del Singleton.
     private val dbHelper = DatabaseHelper.getInstance(context)
+
+    // --- NUEVA CONSTANTE DE CONTROL DE CUPO ---
+    // El cupo máximo que se puede vender por actividad y por día
+    val MAX_CUPO_ACTIVIDAD = 30
+
 
     /**
      * Inserta un nuevo cliente en la tabla 'clientes'.
-     * (Esta función está igual que la tuya)
      */
     fun insertarCliente(
         tipoCliente: String,
@@ -56,7 +63,6 @@ class ClienteRepository(context: Context) {
 
     /**
      * Busca un cliente por su número de documento.
-     * (Esta función está igual que la tuya)
      */
     fun buscarClientePorDocumento(documento: String): String? {
         val db = dbHelper.readableDatabase
@@ -81,22 +87,213 @@ class ClienteRepository(context: Context) {
         return tipoCliente
     }
 
-    // -------------------------------------------------------------------
-    // MODIFICACIÓN: MÉTODO ACTUALIZADO CON LÓGICA DE JOIN
-    // -------------------------------------------------------------------
     /**
-     * Obtiene una lista consolidada de TODOS los pagos (Socios y No Socios)
-     * que tienen vencimiento, uniéndolos con la información del cliente.
-     * ESTA ES LA LÓGICA CENTRAL QUE NECESITAS.
+     * Busca el nombre y apellido de un cliente por su número de documento.
      */
+    fun obtenerDatosSocio(documento: String): DatosSocio? {
+        val db = dbHelper.readableDatabase
+        var datosSocio: DatosSocio? = null
+        val projection = arrayOf(DatabaseHelper.COLUMN_NOMBRE, DatabaseHelper.COLUMN_APELLIDO)
+        val selection = "${DatabaseHelper.COLUMN_DOCUMENTO} = ?"
+        val selectionArgs = arrayOf(documento)
+
+        val cursor = db.query(
+            DatabaseHelper.TABLE_CLIENTES,
+            projection,
+            selection,
+            selectionArgs,
+            null, null, null,
+            "1"
+        )
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val nombreIndex = it.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NOMBRE)
+                val apellidoIndex = it.getColumnIndexOrThrow(DatabaseHelper.COLUMN_APELLIDO)
+                datosSocio = DatosSocio(
+                    nombre = it.getString(nombreIndex),
+                    apellido = it.getString(apellidoIndex)
+                )
+            }
+        }
+        return datosSocio
+    }
+
+    /**
+     * Busca la última fecha de vencimiento registrada para un socio.
+     * @return La fecha de vencimiento (String) si se encuentra, o null.
+     */
+    fun obtenerUltimoVencimientoSocio(documento: String): String? {
+        val db = dbHelper.readableDatabase
+        var ultimoVencimiento: String? = null
+
+        val projection = arrayOf(DatabaseHelper.COLUMN_PAGO_SOCIO_FECHA_VENC)
+        val selection = "${DatabaseHelper.COLUMN_PAGO_SOCIO_ID} = ?"
+        val selectionArgs = arrayOf(documento)
+        val orderBy = "${DatabaseHelper.COLUMN_PAGO_SOCIO_FECHA_VENC} DESC"
+
+        // Consultamos y ordenamos por fecha de vencimiento para obtener la más reciente
+        val cursor = db.query(
+            DatabaseHelper.TABLE_PAGOS_SOCIOS,
+            projection,
+            selection,
+            selectionArgs,
+            null, null,
+            orderBy,
+            "1" // LIMIT 1
+        )
+
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val vencIndex = it.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PAGO_SOCIO_FECHA_VENC)
+                ultimoVencimiento = it.getString(vencIndex)
+            }
+        }
+        return ultimoVencimiento
+    }
+
+    /**
+     * Busca el ID del ÚLTIMO registro de pago para un socio.
+     */
+    private fun obtenerUltimoPagoId(documento: String): Long? {
+        val db = dbHelper.readableDatabase
+        var ultimoId: Long? = null
+
+        val projection = arrayOf(DatabaseHelper.COLUMN_ID_CUOTA)
+        val selection = "${DatabaseHelper.COLUMN_PAGO_SOCIO_ID} = ?"
+        val selectionArgs = arrayOf(documento)
+        // Ordenamos por ID descendente para obtener el último registro insertado
+        val orderBy = "${DatabaseHelper.COLUMN_ID_CUOTA} DESC"
+
+        val cursor = db.query(
+            DatabaseHelper.TABLE_PAGOS_SOCIOS,
+            projection,
+            selection,
+            selectionArgs,
+            null, null,
+            orderBy,
+            "1"
+        )
+
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val idIndex = it.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID_CUOTA)
+                ultimoId = it.getLong(idIndex)
+            }
+        }
+        return ultimoId
+    }
+
+
+    // --- FUNCIÓN PRINCIPAL DE PAGO SOCIO (UPDATE/INSERT) ---
+    /**
+     * Registra un pago de cuota para un Socio. Si ya existe un registro de pago,
+     * ACTUALIZA el último registro en lugar de insertar uno nuevo.
+     */
+    fun registrarPagoSocio(
+        codSocio: String,
+        fechaPago: String,
+        fechaVencimiento: String,
+        monto: Double,
+        estadoPago: String,
+        medioPago: String,
+        cantidadCuotas: Int
+    ): Long {
+
+        val db = dbHelper.writableDatabase
+
+        // 1. Mapear los valores a actualizar/insertar
+        val values = ContentValues().apply {
+            put(DatabaseHelper.COLUMN_PAGO_SOCIO_ID, codSocio)
+            put(DatabaseHelper.COLUMN_PAGO_SOCIO_FECHA_PAGO, fechaPago)
+            put(DatabaseHelper.COLUMN_PAGO_SOCIO_FECHA_VENC, fechaVencimiento)
+            put(DatabaseHelper.COLUMN_PAGO_SOCIO_MONTO, monto)
+            put(DatabaseHelper.COLUMN_PAGO_SOCIO_ESTADO, estadoPago)
+            put(DatabaseHelper.COLUMN_PAGO_SOCIO_MEDIO_PAGO, medioPago)
+            put(DatabaseHelper.COLUMN_PAGO_SOCIO_CANT_CUOTAS, cantidadCuotas)
+        }
+
+        // 2. Intentar encontrar el último registro de pago existente
+        val ultimoPagoId = obtenerUltimoPagoId(codSocio)
+
+        return if (ultimoPagoId != null) {
+            // 3. Si existe, ACTUALIZAR la fila existente
+            val whereClause = "${DatabaseHelper.COLUMN_ID_CUOTA} = ?"
+            val whereArgs = arrayOf(ultimoPagoId.toString())
+
+            val filasAfectadas = db.update(
+                DatabaseHelper.TABLE_PAGOS_SOCIOS,
+                values,
+                whereClause,
+                whereArgs
+            )
+            if (filasAfectadas > 0) ultimoPagoId else -1L
+
+        } else {
+            // 4. Si NO existe (primer pago), INSERTAR una nueva fila
+            db.insert(DatabaseHelper.TABLE_PAGOS_SOCIOS, null, values)
+        }
+    }
+
+
+    // --- FUNCIÓN REGISTRAR PAGO NO SOCIO (INSERT) ---
+    /**
+     * Registra un pago de actividad para un No Socio. Siempre inserta una nueva fila.
+     */
+    fun registrarPagoNoSocio(
+        idNoSocio: String,
+        fechaPago: String,
+        medioPago: String,
+        monto: Double,
+        actividad: String
+    ): Long {
+
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put(DatabaseHelper.COLUMN_PAGO_ID_NO_SOCIO, idNoSocio)
+            put(DatabaseHelper.COLUMN_FECHA_PAGO_NO_SOCIO, fechaPago)
+            put(DatabaseHelper.COLUMN_MEDIO_PAGO_NO_SOCIO, medioPago)
+            put(DatabaseHelper.COLUMN_MONTO_PAGO_NO_SOCIO, monto)
+            put(DatabaseHelper.COLUMN_ACTIVIDAD_PAGO, actividad)
+        }
+
+        val newRowId = db.insert(DatabaseHelper.TABLE_PAGOS_NO_SOCIOS, null, values)
+        return newRowId
+    }
+
+    // --- NUEVA FUNCIÓN: CONTAR CUPOS USADOS ---
+    /**
+     * Cuenta cuántos pagos se han registrado para una actividad específica en un día dado.
+     * @return El número de cupos usados.
+     */
+    fun contarCuposUsadosPorActividadYFecha(actividad: String, fecha: String): Int {
+        val db = dbHelper.readableDatabase
+        var cuposUsados = 0
+
+        val selection = "${DatabaseHelper.COLUMN_ACTIVIDAD_PAGO} = ? AND ${DatabaseHelper.COLUMN_FECHA_PAGO_NO_SOCIO} = ?"
+        val selectionArgs = arrayOf(actividad, fecha)
+
+        // Usamos una consulta raw para simplificar el COUNT
+        val query = "SELECT COUNT(*) FROM ${DatabaseHelper.TABLE_PAGOS_NO_SOCIOS} WHERE $selection"
+
+        val cursor = db.rawQuery(query, selectionArgs)
+
+        cursor?.use {
+            if (it.moveToFirst()) {
+                // El resultado de COUNT(*) está en la columna 0
+                cuposUsados = it.getInt(0)
+            }
+        }
+        return cuposUsados
+    }
+
+
+    // --- Función para listado (se mantiene) ---
     fun obtenerClientesParaListado(): List<ClienteParaListado> {
-        // Usamos mutableListOf para la lista que crecerá
         val listaConsolidada = mutableListOf<ClienteParaListado>()
-        // dbHelper.readableDatabase es una propiedad en Kotlin
         val db = dbHelper.readableDatabase
 
         // --- 1. OBTENER PAGOS DE SOCIOS (JOIN) ---
-        // Usamos cadenas multilínea (""") y plantillas de string ($)
         val querySocios = """
             SELECT
                 c.${DatabaseHelper.COLUMN_DOCUMENTO},
@@ -107,28 +304,24 @@ class ClienteRepository(context: Context) {
             JOIN ${DatabaseHelper.TABLE_CLIENTES} c ON p.${DatabaseHelper.COLUMN_PAGO_SOCIO_ID} = c.${DatabaseHelper.COLUMN_DOCUMENTO}
             WHERE c.${DatabaseHelper.COLUMN_TIPO} = 'Socio'
         """
-
-        // El bloque 'use' de Kotlin reemplaza al 'try-finally' y cierra el cursor automáticamente
         db.rawQuery(querySocios, null)?.use { cursorSocios ->
-            // Obtenemos los índices de las columnas
             val docIndex = cursorSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DOCUMENTO)
             val nombreIndex = cursorSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NOMBRE)
             val apellidoIndex = cursorSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_APELLIDO)
             val vencIndex = cursorSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PAGO_SOCIO_FECHA_VENC)
 
             while (cursorSocios.moveToNext()) {
-                // Usamos plantillas de string para concatenar
                 val nombreCompleto = "${cursorSocios.getString(nombreIndex)} ${cursorSocios.getString(apellidoIndex)}"
 
                 listaConsolidada.add(ClienteParaListado(
                     cursorSocios.getString(docIndex),
                     nombreCompleto,
-                    cursorSocios.getString(vencIndex), // Fecha Vencimiento
-                    "Membresía", // Actividad (Socio)
-                    true // esSocio = true
+                    cursorSocios.getString(vencIndex),
+                    "Membresía",
+                    true
                 ))
             }
-        } // El cursorSocios se cierra aquí
+        }
 
         // --- 2. OBTENER PAGOS DE NO SOCIOS (JOIN) ---
         val queryNoSocios = """
@@ -143,7 +336,6 @@ class ClienteRepository(context: Context) {
             WHERE c.${DatabaseHelper.COLUMN_TIPO} = 'No Socio'
         """
 
-        // Usamos 'use' de nuevo para el segundo cursor
         db.rawQuery(queryNoSocios, null)?.use { cursorNoSocios ->
             val docIndex = cursorNoSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DOCUMENTO)
             val nombreIndex = cursorNoSocios.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NOMBRE)
@@ -157,13 +349,12 @@ class ClienteRepository(context: Context) {
                 listaConsolidada.add(ClienteParaListado(
                     cursorNoSocios.getString(docIndex),
                     nombreCompleto,
-                    cursorNoSocios.getString(vencIndex), // Fecha de Pago
-                    cursorNoSocios.getString(actIndex),  // Actividad
-                    false // esSocio = false
+                    cursorNoSocios.getString(vencIndex),
+                    cursorNoSocios.getString(actIndex),
+                    false
                 ))
             }
-        } // El cursorNoSocios se cierra aquí
-
-        return listaConsolidada // Devuelve la lista combinada
+        }
+        return listaConsolidada
     }
 }

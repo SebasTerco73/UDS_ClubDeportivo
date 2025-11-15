@@ -26,6 +26,36 @@ class DatabaseHelper private constructor(context: Context) :
         onCreate(db) // Vuelve a crear las tres tablas
     }
 
+    // --- INICIO DEL CÓDIGO AÑADIDO ---
+
+    /**
+     * Elimina TODOS los registros (filas) de la tabla de pagos de socios.
+     * La estructura de la tabla (columnas) permanece intacta.
+     */
+    fun limpiarTablaPagosSocios() {
+        // 1. Obtenemos la base de datos en modo escritura
+        val db = this.writableDatabase
+
+        try {
+            // 2. Ejecutamos la eliminación
+            // Al pasar 'null' como cláusula WHERE, se borran todas las filas.
+            db.delete(TABLE_PAGOS_SOCIOS, null, null)
+
+            // Opcional: Si quieres reiniciar el autoincremento (el _id)
+            // db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '$TABLE_PAGOS_SOCIOS'")
+
+        } catch (e: Exception) {
+            // Es buena práctica manejar cualquier excepción
+            e.printStackTrace()
+        } finally {
+            // 3. Cerramos la base de datos
+            db.close()
+        }
+    }
+
+    // --- FIN DEL CÓDIGO AÑADIDO ---
+
+
     // 'companion object' es el equivalente a 'static' en Java
     // Aquí van todas las constantes y el método Singleton
     companion object {
@@ -67,6 +97,7 @@ class DatabaseHelper private constructor(context: Context) :
         const val COLUMN_PAGO_SOCIO_ESTADO = "estadoPago" // TEXT
         const val COLUMN_PAGO_SOCIO_MEDIO_PAGO = "medioPago" // TEXT
         const val COLUMN_PAGO_SOCIO_CANT_CUOTAS = "cantidadCuotas" // INTEGER
+
 
         // --- SQL CREATE (Clientes) ---
         // Usamos multiline strings """ de Kotlin para mejor legibilidad

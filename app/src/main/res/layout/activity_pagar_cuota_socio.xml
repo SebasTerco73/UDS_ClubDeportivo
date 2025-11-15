@@ -113,7 +113,7 @@
                 android:background="@drawable/grisclaro"
                 android:text="Efectivo"
                 android:textSize="16sp"
-                android:checked="true"
+                android:checked="false"
                 android:buttonTint="@android:color/black"
                 android:paddingStart="8dp"
                 android:layout_marginBottom="8dp"/>
