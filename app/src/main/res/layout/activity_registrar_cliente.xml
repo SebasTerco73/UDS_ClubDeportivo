@@ -229,7 +229,7 @@
         android:layout_marginTop="8dp"/>
 
     <CheckBox
-        android:id="@+id/chb.FichaMedica"
+        android:id="@+id/chbFichaMedica"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="80dp"
@@ -240,21 +240,22 @@
         app:layout_constraintHorizontal_bias="0.249"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_FechaInscripcion"
-        app:layout_constraintVertical_bias="0.141" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <CheckBox
-        android:id="@+id/chb.AptoFisico"
+        android:id="@+id/chbAptoFisico"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="54dp"
         android:layout_marginBottom="80dp"
         android:text="Apto Fisico"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.797"
+        app:layout_constraintHorizontal_bias="0.803"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_FechaInscripcion"
-        app:layout_constraintVertical_bias="0.173" />
+        app:layout_constraintTop_toTopOf="@+id/txt_FechaInscripcion"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/btn_Volver"
