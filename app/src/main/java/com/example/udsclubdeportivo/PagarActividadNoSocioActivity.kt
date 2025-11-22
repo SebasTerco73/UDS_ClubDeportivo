@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -81,7 +80,7 @@ class PagarActividadNoSocioActivity : AppCompatActivity() {
         btnConfirmarNs = findViewById(R.id.btn_confirmar_ns)
 
         // --- LÓGICA DE CARGA INICIAL ---
-        val documentoIntent = intent.getStringExtra(EXTRA_DOCUMENTOS)
+        val documentoIntent = intent.getStringExtra(extra_documentos)
         if (!documentoIntent.isNullOrEmpty()) {
             docSocio.setText(documentoIntent)
             buscarClienteYValidarTipo(documentoIntent) // Búsqueda automática
@@ -91,7 +90,8 @@ class PagarActividadNoSocioActivity : AppCompatActivity() {
 
         edtFechaPago.setText(formatoFecha.format(Date()))
         tvPrecio.setText(formatoMonto.format(PRECIO_BASE_ACTIVIDAD))
-        rbEfectivo.isChecked = true
+        rbEfectivo.isChecked = false
+        rbTarjeta.isChecked = false
 
         // --- LISTENERS ---
 
@@ -109,6 +109,20 @@ class PagarActividadNoSocioActivity : AppCompatActivity() {
 
         // Listener para Fecha de Pago (si cambia la fecha, recalcular el cupo)
         edtFechaPago.setOnClickListener { mostrarDatePicker(edtFechaPago)}
+
+       // Lógica para RadioButtons
+        rbEfectivo.setOnClickListener {
+            if (rbEfectivo.isChecked) {
+                rbTarjeta.isChecked = false
+            }
+        }
+
+        rbTarjeta.setOnClickListener {
+            if (rbTarjeta.isChecked) {
+                rbEfectivo.isChecked = false
+            }
+        }
+        // ----------------------------------------------------------------------
 
 
         // --- EVENTOS ---
@@ -301,7 +315,7 @@ class PagarActividadNoSocioActivity : AppCompatActivity() {
         spinnerActividades.setSelection(0)
         tvPrecio.setText(formatoMonto.format(PRECIO_BASE_ACTIVIDAD))
         tvCupo.setText(repository.MAX_CUPO_ACTIVIDAD.toString()) // Resetear cupo visual
-        rbEfectivo.isChecked = true
+        rbEfectivo.isChecked = false
         rbTarjeta.isChecked = false
         limpiarEstado()
         habilitarCamposPago(false)

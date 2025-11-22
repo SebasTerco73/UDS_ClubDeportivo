@@ -244,7 +244,7 @@ class PagarCuotaSocioActivity : AppCompatActivity() {
         val fechaPagoStr = edtFechaPago.text.toString().trim()
         val cantidadCuotas = cantCuotas.text.toString().toIntOrNull() ?: 0
 
-        // 🚨 Manejo de parseo de monto (Solución robusta)
+        // 🚨 Manejo de parseo de monto
         val monto = try {
             val usParser = NumberFormat.getNumberInstance(Locale.US)
             val symbols = DecimalFormatSymbols(Locale.US)

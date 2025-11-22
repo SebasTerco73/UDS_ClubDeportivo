@@ -31,19 +31,17 @@ class ListarVencimientoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_listar_vencimiento)
 
         // --- Inicializar Repositorio ---
-        // Asumimos que ClienteRepository está en el mismo paquete
-        // y que el 'data class ClienteParaListado' también existe.
         repository = ClienteRepository(this)
 
         // --- Encontrar Vistas ---
         tableContainer = findViewById(R.id.table_container)
-        stcSocio = findViewById(R.id.swc_socio) // Asegúrate de que el ID sea correcto
-        stcNoSocio = findViewById(R.id.swc_noSocio) // Asegúrate de que el ID sea correcto
-
+        stcSocio = findViewById(R.id.swc_socio)
+        stcNoSocio = findViewById(R.id.swc_noSocio)
         val rbDia = findViewById<RadioButton>(R.id.rb_dia)
         val rbSemana = findViewById<RadioButton>(R.id.rb_semana)
         val rbMes = findViewById<RadioButton>(R.id.rb_mes)
         val rbTodos = findViewById<RadioButton>(R.id.rb_todos)
+
         radioButtons = listOf(rbDia, rbSemana, rbMes, rbTodos)
 
         val btnVolver = findViewById<Button>(R.id.btn_volver)
@@ -91,9 +89,6 @@ class ListarVencimientoActivity : AppCompatActivity() {
      * Carga la lista completa de clientes desde el repositorio.
      */
     private fun cargarDatosDeLaBaseDeDatos() {
-        // Ejecutamos la consulta a la BD (idealmente esto iría en un hilo secundario)
-        // Esta función (obtenerClientesParaListado) debe ser la versión
-        // actualizada que usa los JOINS.
         listaCompletaClientes = repository.obtenerClientesParaListado()
     }
 
@@ -170,8 +165,7 @@ class ListarVencimientoActivity : AppCompatActivity() {
         val nombreText = crearTextView(cliente.nombreCompleto, 2f)
         val reservaText = crearTextView(cliente.vencimiento, 1.5f)
 
-        // -----------------------------------------------------------------
-        // ✅ MODIFICACIÓN REALIZADA
+        // ----------------------------------------------------------------
         // La actividad solo corresponde al No Socio.
         // Si es Socio, la columna de actividad se mostrará vacía.
         val actividadDisplay = if (cliente.esSocio) {

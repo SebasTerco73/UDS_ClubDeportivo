@@ -178,7 +178,7 @@ class RegistrarClienteActivity : AppCompatActivity() {
 
 
     // ----------------------------------------------------
-    // ⭐ FUNCIÓN AUXILIAR DE VALIDACIÓN (se mantiene) ⭐
+    // ⭐ FUNCIÓN AUXILIAR DE VALIDACIÓN ⭐
     // ----------------------------------------------------
     private fun manejarCambioSwitch(
         targetSwitch: Switch,
@@ -234,8 +234,6 @@ class RegistrarClienteActivity : AppCompatActivity() {
     // ----------------------------------------------------
 
 
-    // Resto de funciones (mostrarDatePicker, limpiarCampos, mostrarConfirmacion) se mantienen
-    // ...
     // Función que abre un DatePicker y setea el resultado en el EditText
     private fun mostrarDatePicker(editText: EditText) {
         val calendario = Calendar.getInstance()
@@ -257,7 +255,6 @@ class RegistrarClienteActivity : AppCompatActivity() {
             campo.setText("")
         }
     }
-
     private fun mostrarConfirmacion(
         title: String,
         message: String,

@@ -26,7 +26,6 @@ class ClienteRepository(context: Context) {
     private val dbHelper = DatabaseHelper.getInstance(context)
 
     // --- NUEVA CONSTANTE DE CONTROL DE CUPO ---
-    // El cupo máximo que se puede vender por actividad y por día
     val MAX_CUPO_ACTIVIDAD = 30
 
 
@@ -288,7 +287,7 @@ class ClienteRepository(context: Context) {
     }
 
 
-    // --- Función para listado (se mantiene) ---
+    // --- Función para listado ---
     fun obtenerClientesParaListado(): List<ClienteParaListado> {
         val listaConsolidada = mutableListOf<ClienteParaListado>()
         val db = dbHelper.readableDatabase
